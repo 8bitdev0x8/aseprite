@@ -41,8 +41,8 @@ if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/laf/CMakeLists.txt)
   message(FATAL_ERROR "Your Aseprite repository is incomplete, initialize submodules using:\n  git submodule update --init --recursive")
 endif()
 
-# This required for KDE/Qt destop integration, which sets BUILD_SHARED_LIBS to
-# TRUE by default
+# This is required for KDE/Qt destop integration, which sets
+# BUILD_SHARED_LIBS to TRUE by default
 set(BUILD_SHARED_LIBS off)
 
 enable_testing()
@@ -79,7 +79,13 @@ option(ENABLE_UI           "Compile UI (turn off to compile CLI-only version)" o
 option(FULLSCREEN_PLATFORM "Enable fullscreen by default" off)
 option(ENABLE_CLANG_TIDY   "Enable static analysis" off)
 option(ENABLE_CCACHE       "Use CCache to improve recompilation speed (optional)" on)
+option(ENABLE_SENTRY       "Use Sentry SDK to report crashes" off)
 set(CUSTOM_WEBSITE_URL "" CACHE STRING "Enable custom local webserver to check updates")
+
+if(ENABLE_SENTRY)
+  set(SENTRY_DIR "" CACHE STRING "Sentry native location")
+  set(SENTRY_DNS "" CACHE STRING "Sentry DNS URL")
+endif()
 
 if(ENABLE_NEWS OR ENABLE_UPDATER)
   set(REQUIRE_CURL ON)
@@ -280,7 +286,7 @@ if(USE_SHARED_GIFLIB)
 else()
   set(GIF_LIBRARY giflib)
   set(GIF_LIBRARIES ${GIF_LIBRARY})
-  set(GIF_INCLUDE_DIR ${GIFLIB_DIR}/lib)
+  set(GIF_INCLUDE_DIR ${GIFLIB_DIR})
   set(GIF_INCLUDE_DIRS ${GIF_INCLUDE_DIR})
 endif()
 include_directories(${GIF_INCLUDE_DIRS})
